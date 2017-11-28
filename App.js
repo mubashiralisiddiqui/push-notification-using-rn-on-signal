@@ -3,13 +3,14 @@ import {
     AppRegistry,
     StyleSheet,
     Text,
-    View
+    View,
+    Button
 } from 'react-native';
 
 import OneSignal from 'react-native-onesignal';
 
 export default class RNOneSignal extends Component {
-    
+
     componentWillMount() {
         OneSignal.addEventListener('received', this.onReceived);
         OneSignal.addEventListener('opened', this.onOpened);
@@ -29,10 +30,10 @@ export default class RNOneSignal extends Component {
     }
 
     onOpened(openResult) {
-      console.log('Message: ', openResult.notification.payload.body);
-      console.log('Data: ', openResult.notification.payload.additionalData);
-      console.log('isActive: ', openResult.notification.isAppInFocus);
-      console.log('openResult: ', openResult);
+        console.log('Message: ', openResult.notification.payload.body);
+        console.log('Data: ', openResult.notification.payload.additionalData);
+        console.log('isActive: ', openResult.notification.isAppInFocus);
+        console.log('openResult: ', openResult);
     }
 
     onRegistered(notifData) {
@@ -40,9 +41,19 @@ export default class RNOneSignal extends Component {
     }
 
     onIds(device) {
-		console.log('Device info: ', device);
+        console.log('Device info: ', device);
     }
-
+    onsendtag() {
+        OneSignal.sendTag("key", "value");
+        OneSignal.enableSound(true);
+        console.log('send')
+    }
+    onreccievetag(){
+        OneSignal.getTags((receivedTags) => {
+            console.log(receivedTags);
+        });
+        OneSignal.inFocusDisplaying(2);
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -54,8 +65,11 @@ export default class RNOneSignal extends Component {
                 </Text>
                 <Text style={styles.instructions}>
                     Double tap R on your keyboard to reload,{'\n'}
-                 
+
                 </Text>
+                <Button title="ok" onPress={()=>{this.onsendtag()}}/>
+
+                <Button title="recieve"onPress={()=>{this.onreccievetag()}}/>
             </View>
         );
     }
